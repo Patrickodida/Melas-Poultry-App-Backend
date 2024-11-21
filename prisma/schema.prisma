@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId       Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders   Order[]
+  payments Payment[]
+}
+
+model Category {
+  categoryId  Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  productId         Int      @id @default(autoincrement())
+  categoryId        Int
+  name              String
+  description       String?
+  price             Decimal
+  availableQuantity Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  category   Category    @relation(fields: [categoryId], references: [categoryId])
+  orderItems OrderItem[]
+}
+
+model Order {
+  orderId     Int         @id @default(autoincrement())
+  userId      Int
+  status      OrderStatus
+  totalAmount Decimal
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user       User        @relation(fields: [userId], references: [userId])
+  orderItems OrderItem[]
+  payments   Payment[]
+}
+
+model OrderItem {
+  orderItemId Int     @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  quantity    Int
+  price       Decimal
+  total       Decimal
+
+  order   Order   @relation(fields: [orderId], references: [orderId])
+  product Product @relation(fields: [productId], references: [productId])
+}
+
+model Payment {
+  paymentId     Int           @id @default(autoincrement())
+  orderId       Int
+  userId        Int
+  amount        Decimal
+  status        PaymentStatus
+  paymentMethod PaymentMethod
+  transactionId String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user  User  @relation(fields: [userId], references: [userId])
+  order Order @relation(fields: [orderId], references: [orderId])
+}
+
+enum OrderStatus {
+  Pending
+  Shipped
+  Delivered
+  Cancelled
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+  Refunded
+}
+
+enum PaymentMethod {
+  CreditCard
+  DebitCard
+  MobileMoney
+  Cash
+}
