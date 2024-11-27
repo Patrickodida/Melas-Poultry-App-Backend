@@ -9,7 +9,7 @@ const validateToken = (req, res, next) => {
         let token = authHeader.split(" ")[1]
         jwt.verify(token, process.env.SECRET_KEY, (err, decoded)=>{
             if(err){
-                req.json(err)
+                res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token validation failed', error: err.message });
             } else {
                 req.user = decoded
                 next()
