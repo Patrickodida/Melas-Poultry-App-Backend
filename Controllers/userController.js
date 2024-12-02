@@ -32,7 +32,7 @@ const registerUser = async (req, res)=>{
         res.status(StatusCodes.CREATED).json({message: 'User registered successfully!', user: newUser})
     }catch(error){
         console.error(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Error regsitering new user!'})
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Error registering new user!'})
     }
 }
 
@@ -85,8 +85,32 @@ const getUserProfile = async (req, res)=>{
     }  
 }
 
+// Function to update user profile
+const updateUserProfile = async (req, res)=>{
+    try{
+        const {userId} = req.params;
+        const {username, email} = req.body;
+        // update user
+        const updateUser = await Prisma.user.update({
+            where:{userId: parseInt(userId)},
+            data:{
+                username,
+                email
+            }
+        })
+        res.status(StatusCodes.OK).json({message: "User profile updated!", user: updateUser})
+    }catch(error){
+        console.error(error)
+        if(error.code === "P2025"){
+            res.status(StatusCodes.NOT_FOUND).json({message: "User not found!"})
+        }
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error updating user profile!"})
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    updateUserProfile
 }
