@@ -1,5 +1,5 @@
 const express = require('express')
-const { createProduct, getProduct, getAllProducts, updateProduct } = require('../Controllers/productController')
+const { createProduct, getProduct, getAllProducts, updateProduct, deleteProduct } = require('../Controllers/productController')
 const validateToken = require('../Utils/validateToken')
 const validateRequest = require('../Utils/joi.validator')
 const { productSchema } = require('../Utils/joi.schemas')
@@ -14,5 +14,7 @@ router.get('/:productId', getProduct);
 router.get('/', getAllProducts);
 // Update product by productId
 router.put('/:productId', validateRequest(productSchema), updateProduct);
+// Delete product by productId
+router.delete('/:productId', deleteProduct);
 
 module.exports = router;

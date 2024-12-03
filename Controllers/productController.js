@@ -88,9 +88,27 @@ const updateProduct = async (req, res)=>{
     }
 }
 
+// Delete product by productId
+const deleteProduct = async (req, res)=>{
+    try{
+        const { productId } = req.params;
+        const product = await Prisma.product.delete({
+            where: {productId: parseInt(productId)}
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully deleted product!", product: product})
+    }catch(error){
+        console.error(error)
+        if(error.code === "P2025"){
+            return res.status(StatusCodes.NOT_FOUND).json({message: "Product not found!"})
+        }
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error deleting product", error: error.message})
+    }
+}
+
 module.exports = {
     createProduct,
     getProduct,
     getAllProducts,
-    updateProduct
+    updateProduct,
+    deleteProduct
 }
