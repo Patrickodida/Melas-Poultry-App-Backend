@@ -28,7 +28,7 @@ const createProductCategory = async (req, res)=>{
     }
 }
 
-// Get all product categories by categoryId
+// Get product categories by categoryId
 const getProductCategory = async (req, res)=>{
     try{
         // Extract categoryId from the route parameters
@@ -47,7 +47,24 @@ const getProductCategory = async (req, res)=>{
     }
 }
 
+// Get all Product categories
+const getAllCategories = async (req, res)=>{
+     // Check if the 'results' query parameter exists and its a valid number
+     try{
+        const limit = req.query.results ? parseInt(req.query.results) : undefined;
+        const productCategory = await Prisma.category.findMany({
+            // Apply limit if its defined
+            take: limit
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully retrieved product categories!", category: productCategory})
+     }catch(error){
+        console.error(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error fetching product categories", error: error.message})
+     }
+}
+
 module.exports = {
     createProductCategory,
-    getProductCategory
+    getProductCategory,
+    getAllCategories
 }
