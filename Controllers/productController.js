@@ -65,8 +65,32 @@ const getAllProducts = async (req, res)=>{
     }
 }
 
+// Update product by productId
+const updateProduct = async (req, res)=>{
+    try{
+        const { productId } = req.params;
+        const { categoryId, name, description, price, availableQuantity } = req.body;
+        // Update product
+        const updateProduct = await Prisma.product.update({
+            where: {productId: parseInt(productId)},
+            data: {
+                categoryId,
+                name,
+                description,
+                price,
+                availableQuantity
+            }
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully updated product!", product: updateProduct})
+    }catch(error){
+        console.error(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error updating product!", error: error.message})
+    }
+}
+
 module.exports = {
     createProduct,
     getProduct,
-    getAllProducts
+    getAllProducts,
+    updateProduct
 }
