@@ -63,8 +63,29 @@ const getAllCategories = async (req, res)=>{
      }
 }
 
+// Update product categories by categoryId
+const updateproductCategory = async (req, res)=>{
+    try{
+        const {categoryId} = req.params;
+        const { name, description } = req.body;
+        // Update category
+        const updateCategory = await Prisma.category.update({
+            where: {categoryId: parseInt(categoryId)},
+            data: {
+                name,
+                description
+            }
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully updated product category!", Category: updateCategory})
+    }catch(error){
+        console.error(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error updating product category!", error: error.message})
+    }
+}
+
 module.exports = {
     createProductCategory,
     getProductCategory,
-    getAllCategories
+    getAllCategories,
+    updateproductCategory
 }
