@@ -1,5 +1,5 @@
 const express = require('express')
-const { createProductCategory, getProductCategory, getAllCategories, updateproductCategory } = require('../Controllers/categoryController')
+const { createProductCategory, getProductCategory, getAllCategories, updateproductCategory, deleteProductCategory } = require('../Controllers/categoryController')
 const validateToken = require('../Utils/validateToken')
 const validateRequest = require('../Utils/joi.validator')
 const { categorySchema } = require('../Utils/joi.schemas')
@@ -14,5 +14,7 @@ router.get('/productCart/:categoryId', getProductCategory);
 router.get('/', getAllCategories);
 // Update product category
 router.put('/:categoryId', updateproductCategory);
+// Delete product category
+router.delete('/:categoryId', deleteProductCategory);
 
 module.exports = router;

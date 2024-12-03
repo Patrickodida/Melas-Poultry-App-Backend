@@ -122,7 +122,7 @@ const deleteUserProfile = async (req, res)=>{
         if(error.code === "P2025"){
             res.status(StatusCodes.NOT_FOUND).json({message: "User not found!"})
         }
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error deleting user!"})
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error deleting user!", error: error.message})
     }
 }
 

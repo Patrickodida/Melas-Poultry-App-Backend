@@ -83,9 +83,27 @@ const updateproductCategory = async (req, res)=>{
     }
 }
 
+// Delete product category by categoryId
+const deleteProductCategory = async (req, res)=>{
+    try{
+        const { categoryId } = req.params;
+        const deleteCategory = await Prisma.category.delete({
+            where: {categoryId: parseInt(categoryId)}
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully deleted product category!", Category: deleteCategory})
+    }catch(error){
+        console.error(error)
+        if(error.code === "P2025"){
+            return res.status(StatusCodes.NOT_FOUND).json({message: "Product category not found!"})
+        }
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error deleting product category!", error: error.message})
+    }
+}
+
 module.exports = {
     createProductCategory,
     getProductCategory,
     getAllCategories,
-    updateproductCategory
+    updateproductCategory,
+    deleteProductCategory
 }
