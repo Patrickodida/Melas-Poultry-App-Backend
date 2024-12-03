@@ -2,21 +2,21 @@ const Joi = require('joi')
 
 // user schema
 const userSchema = Joi.object({
-    username: Joi.string().min(3).max(20).required(),
+    username: Joi.string().min(3).max(50).required(),
     email: Joi.string().email().required(),
     passwordHash: Joi.string().min(8).max(15).required()
 })
 
 // category schema
 const categorySchema = Joi.object({
-    name: Joi.string().min(3).max(20).required(),
+    name: Joi.string().min(3).max(50).required(),
     description: Joi.string().max(500).optional()
 })
 
 // product schema
 const productSchema = Joi.object({
     categoryId: Joi.number().integer().required(),
-    name: Joi.string().min(3).max(20).required(),
+    name: Joi.string().min(3).max(50).required(),
     description: Joi.string().max(500).optional(),
     price: Joi.number().positive().precision(2).required(),
     availableQuantity: Joi.number().integer().min(0).required()
