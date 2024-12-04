@@ -44,7 +44,7 @@ const paymentSchema = Joi.object({
     userId: Joi.number().integer().required(),
     amount: Joi.number().positive().precision(2).required(),
     status: Joi.string().valid('Pending', 'Completed', 'Failed', 'Refunded').required(),
-    paymentMethod: Joi.string().valid('Credit Card', 'Debit Card', 'Mobile Money', 'cash').required(),
+    paymentMethod: Joi.string().valid('CreditCard', 'DebitCard', 'MobileMoney', 'Cash').required(),
     transactionId: Joi.string().required()
 })
 
