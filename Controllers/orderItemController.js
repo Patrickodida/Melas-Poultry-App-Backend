@@ -58,8 +58,50 @@ const getAllOrderItems = async (req, res)=>{
     }
 }
 
+// Update order item
+const updateOrderItem = async (req, res)=>{
+    try{
+        const { orderItemId } = req.params;
+        const { orderId, productId, quantity, price, total } = req.body;
+        // Update order item
+        const orderItem = await Prisma.orderItem.update({
+            where: {orderItemId: parseInt(orderItemId)},
+            data: {
+                orderId,
+                productId,
+                quantity,
+                price,
+                total
+            }
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully updated order item!", updateOrderItem: orderItem})
+    }catch(error){
+        console.error(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error updating order item!", error: error.message})
+    }
+}
+
+// Delete order item
+const deleteOrderItem = async (req, res)=>{
+    try{
+        const { orderItemId } = req.params;
+        const orderItem = await Prisma.orderItem.delete({
+            where: {orderItemId: parseInt(orderItemId)}
+        })
+        res.status(StatusCodes.OK).json({message: "Successfully deleted order item!", orderItem: orderItem})
+    }catch(error){
+        conseole.error(error)
+        if(error.code === "P2025"){
+            res.status(StatusCodes.NOT_FOUND).json({message: "Order item not found!"})
+        }
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error deleting order item!", error: error.message})
+    }
+}
+
 module.exports = {
     createOrderItem,
     getOrderItem,
-    getAllOrderItems
+    getAllOrderItems,
+    updateOrderItem,
+    deleteOrderItem
 }
