@@ -7,8 +7,24 @@ const orderItemRouter = require('./Routes/orderItemsRoute')
 const paymentRouter = require('./Routes/paymentsRoute')
 const cors = require('cors')
 const rateLimit = require('express-rate-limit')
+const morgan = require('morgan')
+const fs = require('fs')
+const path = require('path')
 
 const app = express()
+
+// Ensure 'Logs' directory exists
+const logsDir = path.join(__dirname, 'Logs')
+if(!fs.existsSync(logsDir)){
+    fs.mkdirSync(logsDir)
+}
+// Create writable stream for logging
+const logFilePath = path.join(logsDir, 'text_logs.log')
+const accessLogStream = fs.createWriteStream(logFilePath, { flags: 'a'})
+// Log request to the file
+app.use(morgan('combined', { stream: accessLogStream}))
+// Optional: Log request to the console for development
+app.use(morgan('dev'))
 
 app.use(express.json())
 
