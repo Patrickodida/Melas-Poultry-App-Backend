@@ -18,10 +18,13 @@ const createPayment = async (req, res)=>{
                 transactionId
             }
         })
-        res.status(StatusCodes.OK).json({Message: "Successfully created a payment!", payment: payment})
+        res.status(StatusCodes.OK).json({message: "Successfully created a payment!", payment})
     }catch(error){
+        if(error.code === 'P2002'){
+            return res.status(StatusCodes.BAD_REQUEST).json({message: "Duplicate value for unique field"})
+        }
         console.error(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({Message: "Error creating a payment!", error: error.message})
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error creating a payment!", error: error.message})
     }
 }
 
@@ -78,7 +81,7 @@ const updatePayment = async (req, res)=>{
         })
         res.status(StatusCodes.OK).json({message: "Successfully updated payment!", payment:payment})
     }catch(error){
-        console.error(error)
+        //console.error(error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Error updating payment!", error: error.message})
     }
 }
