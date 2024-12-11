@@ -49,8 +49,9 @@ const getPayment = async (req, res)=>{
 // Get all payments
 const getAllPayments = async (req, res)=>{
     try{
+        const { results } = req.query;
         // Check if the 'results' query parameter exists and its a validd number
-        const limit = req.query.results ? parseInt(req.query.results) : undefined;
+        const limit = results ? parseInt(results) : undefined;
         const payment = await Prisma.payment.findMany({
             // Apply limit if its defined
             take: limit

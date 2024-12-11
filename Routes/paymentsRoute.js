@@ -9,7 +9,7 @@ const router = express.Router()
 // Create payment
 router.post('/register', validateRequest(paymentSchema), createPayment);
 // Get payment by paymentId
-router.get('/:paymentId', getPayment);
+router.get('/:paymentId',getPayment);
 // Get all payments
 router.get('/', getAllPayments);
 // Update payment
